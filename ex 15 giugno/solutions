@@ -1,0 +1,71 @@
+-- GROUP BY
+
+1)
+SELECT COUNT(`id`) AS `n_iscritti`, YEAR(`enrolment_date`) AS `anno_iscrizione`
+FROM `students`
+GROUP BY `anno_iscrizione`;
+
+2)
+SELECT COUNT(`id`) AS `insegnanti`, `teachers`.`office_address` AS `indirizzo`
+FROM `teachers`
+GROUP BY `indirizzo`;
+
+3)
+SELECT ROUND(AVG(`vote`)) AS `media_voti`, `exam_id` AS `appello_esame`
+FROM `exam_student`
+GROUP BY `appello_esame`;
+
+4)
+SELECT COUNT(`id`) AS `n_corsi_laurea`, `department_id` AS `dipartimenti`
+FROM `degrees`
+GROUP BY `dipartimenti`;
+
+-- JOIN
+
+1)
+SELECT `students`.*
+FROM `students`
+JOIN `degrees` ON `students`.`degree_id` = `degrees`.`id`
+WHERE `degrees`.`name` = 'Corso di Laurea in Economia';
+
+2)
+SELECT `degrees`.*
+FROM `degrees`
+JOIN `departments` ON `degrees`.`department_id` = `departments`.`id`
+WHERE `departments`.`name` = 'Dipartimento di Neuroscienze';
+
+3)
+SELECT `courses`.*
+FROM `courses`
+JOIN `course_teacher` ON `courses`.`id` = `course_teacher`.`course_id`
+JOIN `teachers` ON `course_teacher`.`teacher_id` = `teachers`.`id`
+WHERE `teachers`.`name` = 'Fulvio'
+AND `teachers`.`surname` = 'Amato';
+
+4)
+SELECT `students`.`name`, `students`.`surname`, `students`.`registration_number`, `degrees`.`name`, `departments`.name
+FROM `students`
+JOIN `degrees` ON `students`.`degree_id` = `degrees`.`id`
+JOIN `departments` ON `degrees`.`department_id` = `departments`.`id`
+ORDER BY `students`.`surname`
+
+5)
+SELECT `degrees`.`name` AS `dipartimento`, `courses`.`name` AS `corso`, `courses`.`cfu`, `teachers`.`name` AS `nome`, `teachers`.`surname` AS `cognome`
+FROM `degrees`
+JOIN `courses` ON `degrees`.`id` = `courses`.`degree_id`
+JOIN `course_teacher` ON `courses`.`id` = `course_teacher`.`course_id`
+JOIN `teachers` ON `course_teacher`.`teacher_id` = `teachers`.`id`
+
+6)
+SELECT DISTINCT `teachers` .*
+FROM `teachers`
+JOIN `course_teacher` ON `teachers`.`id` = `course_teacher`.`teacher_id`
+
+JOIN `courses` ON `course_teacher`.`course_id` = `courses`.`id`
+
+JOIN `degrees` ON `courses`.`degree_id` = `degrees`.`id`
+
+JOIN `departments` ON `degrees`.`department_id` = `departments`.`id`
+WHERE `departments`.`name` = 'Dipartimento di Matematica'
+ORDER BY `teachers`.`name`;
+
